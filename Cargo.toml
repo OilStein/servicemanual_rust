@@ -9,3 +9,7 @@ edition = "2021"
 chrono = "0.4.23"
 csv = "1.2.0"
 fastrand = "1.9.0"
+actix-web = "4"
+anyhow = "1.0.69"
+tokio = "1.26.0"
+surrealdb = {version = "1.0.0-beta.8", default-features=false, features = ['parallel', 'kv-mem'] }

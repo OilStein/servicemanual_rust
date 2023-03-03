@@ -53,6 +53,18 @@ impl Service {
       }
   }
 
+  pub fn post() {
+    
+  }
+
+  pub fn update() {
+
+  }
+
+  pub fn delete() {
+
+  }
+
 }
 
 
