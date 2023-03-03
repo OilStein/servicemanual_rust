@@ -1,4 +1,5 @@
 mod machines;
+mod service;
 mod utils;
 use crate::machines::Machine;
 
