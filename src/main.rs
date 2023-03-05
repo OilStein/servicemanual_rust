@@ -1,5 +1,6 @@
 mod machines;
 mod utils;
+
 use crate::machines::Machine;
 
 fn main() {
