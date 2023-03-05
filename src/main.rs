@@ -1,12 +1,18 @@
 mod machines;
 mod utils;
+mod database;
 
-use crate::machines::Machine;
+use crate::{machines::Machine, database::Database};
 
-fn main() {
-    let m = Machine::new("name".to_string(), 2000, "EV".to_string());
+use anyhow::{Result};
 
-    println!("{:?}", m);
-
-    let _ma = Machine::read_csv_to_db();
+#[tokio::main]
+async fn main() -> Result<()> {
+    let ds = Database::new().await?;
+ 
+    
+    let _ma = Machine::read_csv_to_db(&ds).await?;
+     ds.select_all_machine().await?; // works fine
+    
+    Ok(())
 }
