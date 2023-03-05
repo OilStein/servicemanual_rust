@@ -1,3 +1,5 @@
+#![allow(unused)] // Remove for prod
+
 mod machines;
 mod service;
 mod utils;
