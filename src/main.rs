@@ -2,6 +2,7 @@
 
 mod machines;
 mod service;
+mod response;
 mod utils;
 use crate::machines::Machine;
 
