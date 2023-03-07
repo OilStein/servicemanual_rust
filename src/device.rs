@@ -20,6 +20,7 @@ impl Device {
     }
   }
 
+
   // Naive reading. Doesn't check invalid data
   // TODO Figure out why relative path doesn't work 
   pub async fn read_csv_to_db(ds: &Database) -> Result<()> {

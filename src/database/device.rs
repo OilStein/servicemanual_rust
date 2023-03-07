@@ -8,24 +8,26 @@ use surrealdb::sql::Value;
 
 
 impl Database {
+
+  // Select now 5 first in alphabet in device name
   pub async fn select_all_device(&self) -> Result<()> {
     let sql = "SELECT * FROM machine WHERE model IS 'Type 1' ORDER BY name ASC LIMIT 5";
     let ress = self.ds.execute(sql, &self.ses, None, false).await?;
     for obj in into_iter_objects(ress)? {
-      println!("{:?}", obj);
+      println!("{}", obj?);
     }
     Ok(())
   }
 
     // Creates a device to the store. Returns created device id
-    pub async fn create_device(&self, m: Device) -> Result<String> {
+    pub async fn create_device(&self, d: Device) -> Result<String> {
       let sql = "CREATE machine CONTENT $data";
   
       let data: BTreeMap<String, Value> = [
-        ("id".into(), m.id.into()),
-        ("name".into(), m.name.into()),
-        ("year".into(), m.year.into()),
-        ("model".into(), m.model.into())
+        ("id".into(), d.id.into()),
+        ("name".into(), d.name.into()),
+        ("year".into(), d.year.into()),
+        ("model".into(), d.model.into())
       ].into();
   
       let vars: BTreeMap<String, Value> = [

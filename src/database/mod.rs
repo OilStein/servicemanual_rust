@@ -11,14 +11,16 @@ pub struct Database {
 }
 
 impl Database {
+
+  // Creates a new datastore
   pub async fn new() -> Result<Self>{
     let ds = Datastore::new("memory").await?;
     let ses = Session::for_db("ns", "db");
-    Ok(Database { ds, ses})
+    Ok(Database{ds, ses})
   }
 }
 
-// Makes response iterable
+// Makes response iterable objects
 pub fn into_iter_objects(ress: Vec<Response>) -> Result<impl Iterator<Item = Result<Object>>> {
 	let res = ress.into_iter().next().map(|rp| rp.result).transpose()?;
 
@@ -32,4 +34,19 @@ pub fn into_iter_objects(ress: Vec<Response>) -> Result<impl Iterator<Item = Res
 		}
 		_ => Err(anyhow!("No records found.")),
 	}
+}
+
+
+
+// Test boilerplate
+#[cfg(test)]
+mod tests {
+use super::*;
+
+  #[tokio::test]
+  async fn test() -> Result<()> {
+    let _ds = Database::new().await?;
+    Ok(())
+  }
+
 }

@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Utc};
 
 use crate::utils::generate_id;
 
@@ -7,19 +7,19 @@ pub struct Maintenance {
   pub id: String,
   pub id_d: String, // relation to device
   pub desc: String, // description of task
-  pub date: DateTime<Local>, // local time when task was registered 
+  pub date: DateTime<Utc>, // utc time. Surreal can take this value more easy
   pub severity: String, // critical, important, unimportant
   pub status: String // open/closed
 }
 
 impl Maintenance {
-    /// Create a new Maintenace obj. Assumes task to be open
+    /// Creates a new Maintenace obj. Assumes task to be open
     pub fn new(id_d: String, desc: String, severity: String) -> Self {
       Maintenance {
       id: generate_id(),
       id_d,
       desc,
-      date: Local::now(), // System local time e.g. `2014-11-28T21:45:59.324310806+09:00`
+      date: Utc::now(), // System local time e.g. `2014-11-28T21:45:59.324310806+09:00`
       severity,
       status: String::from("open")
       }
@@ -30,6 +30,12 @@ impl Maintenance {
     pub fn close(&mut self) {
       self.status = String::from("closed");
     }
+
+    /// Formats date to "01-01-2020 00:00:00"
+    pub fn date_to_string(&self) -> String {
+      format!("{}", self.date.format("%d-%m-%Y %H:%M:%S"))
+    }
+
 }
 
 
@@ -49,9 +55,8 @@ use super::*;
 
   #[test]
   fn create_device_and_task(){
-    let d = Device::new("Kone".to_string(), 2000, "Elevator".to_string());
-    let id_d = &d.id; // Reference manipulation. Not sure is it good :D
-    let mut t = Maintenance::new(id_d.to_string(), "Brake fault".to_string(), "unimportant".to_string());
+    let d = &Device::new("Kone".to_string(), 2000, "Elevator".to_string());
+    let mut t = Maintenance::new( d.id.to_string(), "Brake fault".to_string(), "unimportant".to_string());
     assert_eq!(&d.id, &t.id_d);
     t.close();
     assert_eq!(&t.status, &"closed".to_string());
