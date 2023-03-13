@@ -1,7 +1,7 @@
 
 use anyhow::{Result};
 
-use crate::utils;
+use crate::utils::id_generator::generate_id;
 use crate::database::surreal_db::{SurrealDB};
 
 #[derive(Debug)]
@@ -15,7 +15,7 @@ pub struct Device {
 impl Device {
   pub fn new(name: String, year: i32, model: String) -> Device{
     Device {
-      id: utils::generate_id(),
+      id: generate_id(),
       name,
       year,
       model

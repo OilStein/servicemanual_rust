@@ -1,7 +1,9 @@
-mod device;
 mod utils;
 mod database;
-mod maintenance;
+mod prelude;
+mod error;
+mod model;
+
 
 use actix_web::{HttpServer, App, web::Data};
 

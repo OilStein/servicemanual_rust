@@ -1,6 +1,6 @@
 use chrono::{DateTime, Utc};
 
-use crate::utils::generate_id;
+use crate::utils::id_generator::generate_id;
 
 #[derive(Debug)]
 pub struct Maintenance {
@@ -41,7 +41,7 @@ impl Maintenance {
 
 #[cfg(test)]
 mod tests {
-  use crate::device::Device;
+  use crate::model::device::Device;
 
 use super::*;
 
