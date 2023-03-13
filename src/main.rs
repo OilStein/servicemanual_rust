@@ -4,13 +4,12 @@ mod database;
 mod maintenance;
 
 use actix_web::{HttpServer, App, web::Data};
-use anyhow::{Result};
 
 use crate::database::surreal_db::SurrealDB;
 
 #[tokio::main]
-async fn main() -> Result<()> {
-    let surreal = SurrealDB::init().await?;
+async fn main() -> std::io::Result<()> {
+    let surreal = SurrealDB::init().await;
     let db_data = Data::new(surreal);
 
     HttpServer::new(move || {
@@ -19,7 +18,5 @@ async fn main() -> Result<()> {
     })
     .bind("localhost:8080")?
     .run()
-    .await;
-
-    Ok(())
+    .await
 }
