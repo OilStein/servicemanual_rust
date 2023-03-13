@@ -2,7 +2,7 @@ mod utils;
 mod database;
 mod prelude;
 mod error;
-mod model;
+mod models;
 
 
 use actix_web::{HttpServer, App, web::Data};
