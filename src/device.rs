@@ -1,6 +1,8 @@
 
-use crate::{utils, database::Database};
 use anyhow::{Result};
+
+use crate::utils;
+use crate::database::surreal_db::{SurrealDB};
 
 #[derive(Debug)]
 pub struct Device {
@@ -23,7 +25,7 @@ impl Device {
 
   // Naive reading. Doesn't check invalid data
   // TODO Figure out why relative path doesn't work 
-  pub async fn read_csv_to_db(ds: &Database) -> Result<()> {
+  pub fn read_csv_to_db(ds: &SurrealDB) -> Result<()> {
     let mut reader = csv::ReaderBuilder::new().has_headers(true).from_path(r"D:\rust\servicemanual_rust\data\devices.csv")?;
 
     for result in reader.records() {
@@ -33,7 +35,7 @@ impl Device {
         record.get(1).ok_or_else(|| anyhow::anyhow!("missing year"))?.parse()?,
         record.get(2).ok_or_else(|| anyhow::anyhow!("missing model"))?.to_string(),
       );
-      ds.create_device(device).await?;
+      // ds.create_device(device).await?;
     }
     Ok(())
   }
