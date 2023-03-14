@@ -20,6 +20,19 @@ pub struct Maintenance {
   pub status: String // open/closed
 }
 
+impl Maintenance {
+  pub fn new(did: String, desc: String, severity: String) -> Maintenance {
+    Maintenance {
+      id: None,
+      id_d: did,
+      desc,
+      date: Utc::now(),
+      severity,
+      status: String::from("open"),
+    }
+  }
+}
+
 impl From<Maintenance> for Value {
   fn from(value: Maintenance) -> Self {
       match value.id {
@@ -29,7 +42,7 @@ impl From<Maintenance> for Value {
               "id_d".into() => value.id_d.into(),
               "desc".into() => value.desc.into(),
               "date".into() => value.date.into(),
-              "severity".into() => value.date.into(),
+              "severity".into() => value.severity.into(),
               "status".into() => value.status.into()
             ].into()
           },
@@ -38,7 +51,7 @@ impl From<Maintenance> for Value {
               "id_d".into() => value.id_d.into(),
               "desc".into() => value.desc.into(),
               "date".into() => value.date.into(),
-              "severity".into() => value.date.into(),
+              "severity".into() => value.severity.into(),
               "status".into() => value.status.into()
             ].into()
           }
@@ -80,6 +93,22 @@ impl Patchable for MaintenancePatch {}
 pub struct MaintenanceBMC;
 
 impl MaintenanceBMC {
+
+  pub async fn get(db: Data<SurrealDB>, mid: &str) -> Result<Object, Error> {
+    let sql = "SELECT * FROM $th";
+    let mid = format!("device:{}", mid);
+
+    let vars: BTreeMap<String, Value> = map![
+      "th".into() => thing(&mid)?.into()
+    ];
+
+    let res =  db.ds.execute(sql, &db.ses, Some(vars), true).await?;
+    let obj = res.into_iter().next().expect("Failed to get response");
+
+    W(obj.result?.first()).try_into()
+
+  }
+
   pub async fn get_all(db: Data<SurrealDB>) -> Result<Vec<Object>, Error> {
     let sql = "SELECT * FROM maintenance;";
 
