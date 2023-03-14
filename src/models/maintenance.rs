@@ -13,18 +13,25 @@ use crate::database::surreal_db::{Creatable, Patchable, SurrealDB};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Maintenance {
   pub id: Option<String>,
-  pub id_d: String, // relation to device
+  pub did: String, // relation to device
   pub desc: String, // description of task
   pub date: DateTime<Utc>, // utc time. Surreal can take this value more easy
   pub severity: String, // critical, important, unimportant
   pub status: String // open/closed
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct MaintenanceCreator {
+  pub did: String,
+  pub desc: String,
+  pub severity: String,
+}
+
 impl Maintenance {
   pub fn new(did: String, desc: String, severity: String) -> Maintenance {
     Maintenance {
       id: None,
-      id_d: did,
+      did,
       desc,
       date: Utc::now(),
       severity,
@@ -39,7 +46,7 @@ impl From<Maintenance> for Value {
           Some(v) => {
             map![
               "id".into() => v.into(),
-              "id_d".into() => value.id_d.into(),
+              "id_d".into() => value.did.into(),
               "desc".into() => value.desc.into(),
               "date".into() => value.date.into(),
               "severity".into() => value.severity.into(),
@@ -48,7 +55,7 @@ impl From<Maintenance> for Value {
           },
           None => {
             map![
-              "id_d".into() => value.id_d.into(),
+              "id_d".into() => value.did.into(),
               "desc".into() => value.desc.into(),
               "date".into() => value.date.into(),
               "severity".into() => value.severity.into(),
