@@ -92,5 +92,4 @@ impl DeviceBMC {
 
         W(obj.result?.first()).try_into()
     }
-
 }

@@ -1,5 +1,7 @@
 use crate::database::surreal_db::SurrealDB;
-use crate::models::maintenance::{Maintenance, MaintenanceBMC, MaintenancePatch, MaintenanceCreator};
+use crate::models::maintenance::{
+    Maintenance, MaintenanceBMC, MaintenanceCreator, MaintenancePatch,
+};
 use actix_web::{
     delete, get, post, put,
     web::{Data, Json, Path},
@@ -11,7 +13,11 @@ pub async fn create_maintenance(
     db: Data<SurrealDB>,
     new_m: Json<MaintenanceCreator>,
 ) -> HttpResponse {
-    let data: Maintenance = Maintenance::new(new_m.did.to_owned(), new_m.desc.to_owned(), new_m.severity.to_owned());
+    let data: Maintenance = Maintenance::new(
+        new_m.did.to_owned(),
+        new_m.desc.to_owned(),
+        new_m.severity.to_owned(),
+    );
 
     let maintenance_detail = MaintenanceBMC::create(db, "maintenance", data).await;
 
