@@ -18,7 +18,9 @@ async fn main() -> std::io::Result<()> {
     
     // TODO! call here initializer that populates devices to the database
 
+    
     let db_data = Data::new(surreal);
+    utils::populate::populate(db_data.to_owned()).await.expect("something");
 
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
