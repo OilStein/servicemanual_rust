@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 
 use actix_web::web::Data;
 use serde::{Serialize, Deserialize};
-use surrealdb::sql::{Value, Object, Array};
+use surrealdb::sql::{Value, Object, Array, thing};
 
 use crate::{database::surreal_db::{Creatable, SurrealDB}, utils::macros::map, prelude::*};
 
@@ -53,4 +53,39 @@ impl DeviceBMC {
     array.into_iter().map(|value| W(value).try_into()).collect()
      
   }
+
+
+  pub async fn create<T: Creatable>(db: Data<SurrealDB>, tb: &str, data: T) -> Result<Object, Error> {
+    let sql = "CREATE type::table($tb) CONTENT $data RETURN *";
+
+    let data: Object = W(data.into()).try_into()?;
+
+    let vars: BTreeMap<String, Value> = map![
+      "tb".into() => tb.into(),
+      "data".into() => Value::from(data),
+    ];
+
+    let res = db.ds.execute(sql, &db.ses, Some(vars), false).await?;
+
+    let val = res.into_iter().next().map(|r| r.result).expect("id not returned")?;
+
+    W(val.first()).try_into()
+
+  }
+
+  pub async fn get(db: Data<SurrealDB>, id: &str) -> Result<Object, Error> {
+    let sql = "SELECT * FROM $th";
+
+    let d_id = format!("device:{}", id);
+
+    let vars: BTreeMap<String, Value> = map![
+      "th".into() => thing(&d_id)?.into()
+    ];
+
+    let res =  db.ds.execute(sql, &db.ses, Some(vars), true).await?;
+    let obj = res.into_iter().next().expect("Failed to get response");
+
+    W(obj.result?.first()).try_into()
+  }
+
 }
