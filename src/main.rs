@@ -38,6 +38,7 @@ async fn main() -> std::io::Result<()> {
             .service(create_maintenance)
             .service(delete_maintenance)
             .service(update_maintenance)
+            .service(get_by_did)
     })
     .bind("localhost:8080")?
     .run()
