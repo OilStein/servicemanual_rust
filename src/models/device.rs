@@ -10,6 +10,7 @@ use crate::{
     utils::macros::map,
 };
 
+/// Struct for device
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Device {
     pub id: Option<String>,
@@ -18,6 +19,7 @@ pub struct Device {
     pub model: String, // type == model
 }
 
+/// Converts to Value
 impl From<Device> for Value {
     fn from(val: Device) -> Self {
         match val.id {

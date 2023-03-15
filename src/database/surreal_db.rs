@@ -11,7 +11,9 @@ pub struct SurrealDB {
     pub ses: Session,
 }
 
+
 impl SurrealDB {
+    /// Creates SurrealDB database wrapped in an atomic reference counter for cloning
     pub async fn init() -> Result<Self, Error> {
         let ds = Arc::new(Datastore::new("memory").await?);
         let ses = Session::for_kv().with_ns("test").with_db("test");

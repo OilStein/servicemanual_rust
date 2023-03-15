@@ -13,10 +13,12 @@ use api::maintenance_api::*;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // Creates database
     let surreal = SurrealDB::init()
         .await
         .expect("Error connecting to SurrealDB");
 
+    // Wrapped with actix Data type for routing services
     let db_data = Data::new(surreal);
     utils::populate::populate(db_data.to_owned())
         .await

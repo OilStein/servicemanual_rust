@@ -15,7 +15,7 @@ pub async fn create_device(db: Data<SurrealDB>, new_device: Json<Device>) -> Htt
         model: new_device.model.to_owned(),
     };
 
-    let device_detail = DeviceBMC::create(db, "device", data).await;
+    let device_detail = DeviceBMC::create(db, "devices", data).await;
 
     match device_detail {
         Ok(device) => HttpResponse::Ok().json(device),
