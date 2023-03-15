@@ -8,7 +8,7 @@ use actix_web::{
     HttpResponse,
 };
 
-#[post("/maintenances")]
+#[post("/maintenance")]
 pub async fn create_maintenance(
     db: Data<SurrealDB>,
     new_m: Json<MaintenanceCreator>,
@@ -32,12 +32,29 @@ pub async fn get_maintenances(db: Data<SurrealDB>) -> HttpResponse {
     let result = MaintenanceBMC::get_all(db).await;
 
     match result {
-        Ok(devices) => HttpResponse::Ok().json(devices),
+        Ok(tasks) => HttpResponse::Ok().json(tasks),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }
 
-#[get("/maintenances/{id}")]
+#[get("/maintenances/{did}")]
+pub async fn get_by_did(db: Data<SurrealDB>, path: Path<String>) -> HttpResponse {
+    let did = path.into_inner();
+    
+    if did.is_empty() {
+        return HttpResponse::BadRequest().body("invalid device id");
+    }
+
+    let result = MaintenanceBMC::get_by_did(db, &did).await;
+
+    match result {
+        Ok(tasks) => HttpResponse::Ok().json(tasks),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+}
+
+
+#[get("/maintenance/{id}")]
 pub async fn get_maintenance(db: Data<SurrealDB>, path: Path<String>) -> HttpResponse {
     let id = path.into_inner();
 
@@ -53,7 +70,7 @@ pub async fn get_maintenance(db: Data<SurrealDB>, path: Path<String>) -> HttpRes
     }
 }
 
-#[put("/maintenances/{id}")]
+#[put("/maintenance/{id}")]
 pub async fn update_maintenance(
     db: Data<SurrealDB>,
     path: Path<String>,

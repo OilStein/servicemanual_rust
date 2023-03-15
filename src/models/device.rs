@@ -46,7 +46,7 @@ pub struct DeviceBMC;
 
 impl DeviceBMC {
     pub async fn get_all(db: Data<SurrealDB>) -> Result<Vec<Object>, Error> {
-        let sql = "SELECT * FROM device";
+        let sql = "SELECT * FROM device ORDER BY name ASC";
 
         let res = db.ds.execute(sql, &db.ses, None, false).await?;
         let f_res = res.into_iter().next().expect("Did not get a response");

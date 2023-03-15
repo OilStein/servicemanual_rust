@@ -104,6 +104,22 @@ impl Patchable for MaintenancePatch {}
 pub struct MaintenanceBMC;
 
 impl MaintenanceBMC {
+    pub async fn get_by_did(db: Data<SurrealDB>, did: &str) -> Result<Vec<Object>, Error> {
+        let sql = "SELECT * FROM maintenance WHERE did = $th ORDER BY severity ASC, date ASC";
+        let did = format!("device:{}", did);
+
+        let vars: BTreeMap<String, Value> = map![
+            "th".into() => thing(&did)?.into()
+        ];
+
+        let res = db.ds.execute(sql, &db.ses, Some(vars), true).await?;
+        let f_res = res.into_iter().next().expect("Failed to get response");
+
+        let array: Array = W(f_res.result?).try_into()?;
+
+        array.into_iter().map(|value| W(value).try_into()).collect()
+    }
+
     /// Returns surrealdb Object from database, which is serializable as JSON
     pub async fn get(db: Data<SurrealDB>, mid: &str) -> Result<Object, Error> {
         let sql = "SELECT * FROM $th";
@@ -120,7 +136,7 @@ impl MaintenanceBMC {
     }
     /// Returns vector of Objects from database
     pub async fn get_all(db: Data<SurrealDB>) -> Result<Vec<Object>, Error> {
-        let sql = "SELECT * FROM maintenance";
+        let sql = "SELECT * FROM maintenance ORDER BY severity ASC, date ASC";
 
         let res = db.ds.execute(sql, &db.ses, None, true).await?;
 
