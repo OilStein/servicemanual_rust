@@ -4,6 +4,7 @@ mod error;
 mod models;
 mod prelude;
 mod utils;
+mod tests;
 
 use actix_web::{web::Data, App, HttpServer};
 
@@ -24,6 +25,7 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("something");
 
+    // Debug logger
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
 

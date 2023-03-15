@@ -14,7 +14,7 @@ Simple REST API that writes maintenance tasks and list them.
 
 ## REST endpoints
 
-General rule: When getting one thing endpoint is device or maintenance. When getting multiple things endpoint is devices or maintenances
+General rule: When getting one thing endpoint is /device or /maintenance. When getting multiple things endpoint is /devices or /maintenances
 
 - get /device/{id}
 - get post - /device
@@ -99,4 +99,4 @@ All json record are optional on update call
 - Better SurrealQL querys
 - Enum types for severity and status
 - Date in local time, now in utc form..
-- Tests. Compiler warns a lot of possible run time errors.
+- Tests. Compiler warns a lot of possible runtime errors.
