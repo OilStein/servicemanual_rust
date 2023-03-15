@@ -14,7 +14,7 @@ pub async fn create_maintenance(
     new_m: Json<MaintenanceCreator>,
 ) -> HttpResponse {
     let data: Maintenance = Maintenance::new(
-        new_m.did.to_owned(),
+        format!("device:{}", new_m.did).to_owned(),
         new_m.desc.to_owned(),
         new_m.severity.to_owned(),
     );

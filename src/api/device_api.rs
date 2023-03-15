@@ -6,7 +6,7 @@ use actix_web::{
     HttpResponse,
 };
 
-#[post("/devices")]
+#[post("/device")]
 pub async fn create_device(db: Data<SurrealDB>, new_device: Json<Device>) -> HttpResponse {
     let data = Device {
         id: None,
@@ -33,7 +33,7 @@ pub async fn get_devices(db: Data<SurrealDB>) -> HttpResponse {
     }
 }
 
-#[get("/devices/{id}")]
+#[get("/device/{id}")]
 pub async fn get_device(db: Data<SurrealDB>, path: Path<String>) -> HttpResponse {
     let id = path.into_inner();
 
